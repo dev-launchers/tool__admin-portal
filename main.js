@@ -42,6 +42,13 @@ async function handleRequest(request) {
     }
     console.log("Created prod repo")
 
+    resp = await githubAPIClient.createBranchFromHead(repoName, DEV_USER, 'gh-pages')
+    if (resp.status != 201) {
+        console.log(`Failed to create gh-pages branch for ${repoName}, status ${resp.status}`)
+        return resp
+    }
+    console.log(`Create gh-pages branch for ${repoName}`)
+
     resp = await githubAPIClient.enableGithubPage(repoName, DEV_USER, 'gh-pages')
     if (resp.status != 201) {
         console.log(`Failed to enabled github page on dev repo ${repoName} owned by ${DEV_USER}, status ${resp.status}`)
@@ -148,6 +155,38 @@ class GithubAPIClient {
             },
         )
         return asyncFetch(req)
+    }
+
+    async createBranchFromHead(repoName, owner, newBranch) {
+        // Get sha of head
+        const headShaReq = new Request(
+            `${this.baseURL}/repos/${owner}/${repoName}/git/refs/heads`,
+            {
+                method: 'GET',
+                headers: this.authHeaders,
+            },
+        )
+        const resp = await asyncFetch(headShaReq)
+        if (resp.status != 200) {
+            return resp
+        }
+
+        const headSha = await resp.json().then(body => {
+            return body[0].object.sha
+        })
+        const createBranchReq = new Request(
+            `${this.baseURL}/repos/${owner}/${repoName}/git/refs`,
+            {
+                method: 'POST',
+                headers: this.authHeaders,
+                body: JSON.stringify({
+                    "ref": `refs/heads/${newBranch}`,
+                    "sha": headSha
+                }),
+            },
+        )
+        return asyncFetch(createBranchReq)
+
     }
 }
 
