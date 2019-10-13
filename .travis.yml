@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - node
+
+# skip tests
+install: true
+
+deploy:
+  provider: script
+  script: bash deploy.sh $ACCOUNT_ID $ZONE_ID $ROUTE $ADMIN_PORTAL_KV_NAMESPACES
+  skip_cleanup: true
+  on:
+    branch: master
+
+before_install:
+    - "npm i @cloudflare/wrangler -g"

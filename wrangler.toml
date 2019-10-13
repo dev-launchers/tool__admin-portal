@@ -1,0 +1,9 @@
+type = "webpack"
+name = "tool__admin-portal"
+account_id = "ACCOUNT_ID"
+zone_id = "ZONE_ID"
+route = "ROUTE"
+kv-namespaces = [
+    { binding = "ADMIN_PORTAL", id = "ADMIN_PORTAL_KV_NAMESPACES" }
+]
+workers_dev = false
