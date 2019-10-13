@@ -1,0 +1,17 @@
+{
+  "name": "tool__admin-portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "build": "parcel build main.js"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-launchers/tool__admin-portal.git"
+  },
+  "keywords": []
+}
