@@ -42,14 +42,14 @@ async function handleRequest(request) {
     }
     console.log("Created prod repo")
 
-    resp = await githubAPIClient.enableGithubPage(repoName, DEV_USER)
+    resp = await githubAPIClient.enableGithubPage(repoName, DEV_USER, 'gh-pages')
     if (resp.status != 201) {
         console.log(`Failed to enabled github page on dev repo ${repoName} owned by ${DEV_USER}, status ${resp.status}`)
         return resp
     }
     console.log("Enabled github page on dev repo")
 
-    resp = await githubAPIClient.enableGithubPage(repoName, PROD_ORG)
+    resp = await githubAPIClient.enableGithubPage(repoName, PROD_ORG, 'master')
     if (resp.status != 201) {
         console.log(`Failed to enabled github page on prod repo ${repoName} owned by ${PROD_ORG}, status ${resp.status}`)
         return resp
@@ -134,7 +134,7 @@ class GithubAPIClient {
         return asyncFetch(req)
     }
 
-    async enableGithubPage(repoName, owner) {
+    async enableGithubPage(repoName, owner, branch) {
         const req = new Request(
             `${this.baseURL}/repos/${owner}/${repoName}/pages`,
             {
@@ -142,7 +142,7 @@ class GithubAPIClient {
                 headers: addAcceptHeader(this.authHeaders, "application/vnd.github.switcheroo-preview+json"),
                 body: JSON.stringify({
                     "source": {
-                        "branch": "master",
+                        "branch": branch,
                     },
                 }),
             },
