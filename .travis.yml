@@ -7,7 +7,7 @@ install: true
 
 deploy:
   provider: script
-  script: bash deploy.sh $ACCOUNT_ID $ZONE_ID $ROUTE $ADMIN_PORTAL_KV_NAMESPACES
+  script: bash deploy.sh $ACCOUNT_ID $ZONE_ID $ROUTE $ADMIN_PORTAL_KV_NAMESPACES $CF_API_KEY $CF_EMAIL
   skip_cleanup: true
   on:
     branch: master
