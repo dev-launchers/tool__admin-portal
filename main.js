@@ -230,8 +230,8 @@ class TravisAPIClient {
                 headers: this.authHeaders,
                 body: JSON.stringify({
                     "env_var.name": name,
-                    "value": val,
-                    "public": false,
+                    "env_var.value": val,
+                    "env_var.public": false,
                 }),
             },
         )
