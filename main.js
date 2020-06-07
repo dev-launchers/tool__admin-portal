@@ -14,6 +14,7 @@ const USER_AGENT = 'dev-launchers-internal-api'
 async function handleRequest(request) {
     const url = new URL(request.url)
     const projectName = url.searchParams.get("project")
+    const templateRepo = url.searchParams.get("template")
 
     if (projectName == null) {
         console.log("project name is not specified in query parameter")
@@ -27,7 +28,7 @@ async function handleRequest(request) {
     const githubAuthToken = await ADMIN_PORTAL.get("githubAuthToken")
     const githubAPIClient = new GithubAPIClient(GITHUB_API, githubAuthToken, USER_AGENT)
 
-    let resp = await githubAPIClient.createDevRepo(repoName, DEV_USER)
+    let resp = await githubAPIClient.createDevRepo(repoName, DEV_USER, templateRepo)
 
     if (resp.status != 201) {
         console.log(`Failed to create dev ${repoName}, status ${resp.status}`)
@@ -107,9 +108,12 @@ class GithubAPIClient {
         }
     }
 
-    async createDevRepo(repoName, user) {
+    async createDevRepo(repoName, user, templateRepo) {
+        if (templateRepo == null) {
+            templateRepo = "template__project"
+        }
         const req = new Request(
-            `${this.baseURL}/repos/${user}/template__project/generate`,
+            `${this.baseURL}/repos/${user}/${templateRepo}/generate`,
             {
                 method: 'POST',
                 headers: addAcceptHeader(this.authHeaders, "application/vnd.github.baptiste-preview+json"),
